@@ -31,22 +31,12 @@ let night = false;
 
 
 function switchMode() {
-  if(night) {
+  if (night) {
 
   	night = false;
   	document.body.classList.remove('night');
 
-  	document.querySelectorAll('.hamburger > line').forEach(item => {
-  		item.style.stroke = '#000';
-  	});
-
-  	document.querySelectorAll('.videos__item-descr').forEach(item => {
-  		item.style.color = '#000';
-  	});
-
-  	document.querySelectorAll('.videos__item-views').forEach(item => {
-  		item.style.color = '#000';
-  	});
+		setColorItems('#000');
 
   	document.querySelector('.header__item-descr').style.color = '#000';
   	document.querySelector('.logo > img').src = 'logo/youtube.svg';
@@ -56,22 +46,37 @@ function switchMode() {
   	night = true;
   	document.body.classList.add('night');
 
-  	document.querySelectorAll('.hamburger > line').forEach(item => {
-  		item.style.stroke = '#fff';
-  	});
-
-  	document.querySelectorAll('.videos__item-descr').forEach(item => {
-  		item.style.color = '#fff';
-  	});
-
-  	document.querySelectorAll('.videos__item-views').forEach(item => {
-  		item.style.color = '#fff';
-  	});
+  	setColorItems('#fff');
 
   	document.querySelector('.header__item-descr').style.color = '#fff';
   	document.querySelector('.logo > img').src = 'logo/youtube_night.svg';
   	
   }
+}
+
+function setColorItem(elem, clr) {
+  if (elem.tagName.toUpperCase() === 'LINE')
+	  elem.style.stroke = clr;
+	else 
+	  elem.style.color = clr;
+}
+
+function setColorCard(card, clr) {
+  card.querySelectorAll('.hamburger > line').forEach(item => {
+		setColorItem(item, clr);
+	});
+
+	card.querySelectorAll('.videos__item-descr').forEach(item => {
+		setColorItem(item, clr);
+	});
+
+	card.querySelectorAll('.videos__item-views').forEach(item => {
+		setColorItem(item, clr);
+	});
+}
+
+function setColorItems(clr) {
+	setColorCard(document, clr);
 }
 
 switcher.addEventListener('change', switchMode);
@@ -107,6 +112,7 @@ btnLoad.addEventListener('click', () => {
 			card.classList.remove('videos__item-active');
 		}, 10);
 		//bindNewModal(card);
+		night ? setColorCard(card, '#fff') : setColorCard(card, '#000');
 	}
 
 	sliceTitle('.videos__item-descr', 100);
@@ -145,7 +151,7 @@ modal.addEventListener('click', (e) => {
 videosWrapper.addEventListener('click', (e) => { // прослушивание нажатие на ссылки для открытия модального окна
   console.log(e);
 
-	if (e.target.parentNode.tagName === "A" || e.target.tagName === "A") {
+	if ( (e.target.parentNode != null && e.target.parentNode.tagName === "A") || e.target.tagName === "A") {
 		const elemA = e.target.parentNode.tagName === "A" ? e.target.parentNode : e.target;
 		e.preventDefault();
 		const id = elemA.getAttribute('data-url');
@@ -167,7 +173,7 @@ function createVideoPlayer() {
 					width: '100%',
 					videoId: 'M7lc1UVf-VE'
 				});
-			}, 300);
+			}, 1000);
 }
 
 createVideoPlayer();
